@@ -1,0 +1,66 @@
+package ujicoba;
+
+public class urutString {
+static char[][] huruf = {{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'},
+                         {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}};
+static int panjang = 15;
+    public static void urut(String[] nama){
+        int[][] angka = new int [nama.length][panjang];
+        char[][]  urutin=new char[nama.length][panjang];
+        char[] pecah = new char[panjang];
+        for(int i=0;i<nama.length;i++){
+            pecah=nama[i].toCharArray();
+            for(int j=0;j<pecah.length;j++){
+                urutin[i][j]=pecah[j];
+                for(int k=0;k<26;k++){
+                    if((urutin[i][j]==huruf[0][k])||(urutin[i][j]==huruf[1][k])){
+                        angka[i][j]=k+1;
+                    }
+                }
+            }
+        }
+        for(int i=0;i<nama.length;i++){
+            for(int j=0;j<panjang;j++){
+                System.out.print(angka[i][j]+" ");
+            }System.out.println("");
+        }
+        int k=0;
+        for(int i=0;i<nama.length;i++){
+            for(int j=0;j<nama.length-1;j++){
+                urutan(angka,nama,j,k);
+            }
+        }
+    }
+
+    public static void urutan(int[][] angka,String[] nama,int i, int j){
+        int temp1=0;
+        String temp="";
+        if(angka[i][j]==angka[i+1][j]){
+            urutan(angka,nama,i,++j);
+        }else if(angka[i+1][j]<angka[i][j]){
+            temp1=angka[i][j];
+            angka[i][j]=angka[i+1][j];
+            angka[i+1][j]=temp1;
+            temp=nama[i];
+            nama[i]=nama[i+1];
+            nama[i+1]=temp;
+        }else if(i+1==nama.length){
+            if(angka[i][j]>angka[i+1][j]){
+                temp1=angka[i][j];
+                angka[i][j]=angka[i+1][j];
+                angka[i+1][j]=temp1;
+                temp=nama[i];
+                nama[i]=nama[i+1];
+                nama[i+1]=temp;
+            }
+        }
+    }
+    public static void main(String[] args) {
+        String[] nama = {"Amin","Amon","Adi","aldo","adu","ali"};
+        urut(nama);
+        for(int i=0;i<nama.length;i++){
+            System.out.print(nama[i]+" ");
+        }
+    }
+    
+}
