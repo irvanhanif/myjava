@@ -1,0 +1,340 @@
+package blankpack;
+
+import static java.lang.Integer.parseInt;
+import java.util.Scanner;
+
+public class berhitunghari {
+static Scanner scan = new Scanner (System.in);
+static Scanner sc = new Scanner (System.in).useDelimiter("\n");
+static String[][] hari = {{"Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu","Minggu"},{"senin","selasa","rabu","kamis","jum'at","sabtu","minggu"}};
+static String[][] bulan = {{"Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"},{"januari","februari","maret","april","mei","juni","juli","agustus","september","oktober","november","desember"}};
+static String[] tanggal = new String [3];
+static long date=0, year=0, wulan=0, dino=0, jumlahhari=0;
+static String month=" ", day=" ";
+static long dateawal=0, yearawal=0, wulanawal=0, dinoawal=0;
+
+    public static void menu(){
+        int jawab;
+        do{
+            System.out.println("Menu hitungan tanggal :\n"
+                    + "1. Hari apa setelah/sebelum hitungan hari\n"
+                    + "2. Hari apa pada tanggal yang diinput\n"
+                    + "3. keluar");
+            System.out.print("Jawaban : ");
+            jawab = scan.nextInt();
+            switch (jawab){
+                case 1 :
+                    menu1();
+                    break;
+                case 2 :
+                    menu2();
+                    break;
+                case 3 :
+                    System.out.println("Terima kasih dan sampai jumpa");
+                    break;
+                default :
+                    System.out.println("Coba lagi");
+                    break;
+            }
+            date=dateawal;year=yearawal;wulan=wulanawal;dino=dinoawal;
+        }while(jawab!=3&&jawab>0);
+    }
+    public static void input(){
+        System.out.print("Input tanggal, bulan, tahun pada hari ini : ");
+        String input = scan.nextLine();
+        tanggal = input.split(" ");
+        date = parseInt(tanggal[0]);
+        month = tanggal[1];
+        year = parseInt(tanggal[2]);
+        System.out.print("Input hari apa hari ini : ");
+        day = scan.next();
+    }
+    public static void hitunghari(){
+        if(year%4==0){
+            if(wulan==1){
+                jumlahhari = 29;
+            }
+        }else{
+            if(wulan==1){
+                jumlahhari = 28;
+            }
+        }if(wulan!=1){
+            if((wulan%2==0&&wulan<7)||(wulan>=7&&wulan%2!=0)){
+                jumlahhari=31;
+            }else if((wulan%2!=0&&wulan<=7)||(wulan%2==0&&wulan>7)){
+                jumlahhari=30;
+            }
+        }
+    }
+    public static void hitung(long ingin){
+        if(ingin<0){
+            if(-1*ingin>=date){
+                if(wulan==0){
+                    wulan=11;
+                    year--;
+                }else{
+                wulan--;
+                }
+                hitunghari();
+                date=jumlahhari+date+ingin;
+                if(date<0){
+                    ingin=date;
+                    date=0;
+                    hitung(ingin);
+                }
+            }else{
+                date+=ingin;
+            }
+        }else if(ingin<=jumlahhari-date){
+            date+=ingin;
+        }else if(ingin>jumlahhari-date&&ingin>0){
+            ingin-=jumlahhari-date;
+            date=0;wulan++;
+            if(wulan/12!=0){
+                wulan%=12;year++;
+            }
+            hitunghari();
+            if(ingin>jumlahhari){
+                hitung(ingin);
+            }
+            if(ingin<jumlahhari){
+                date=ingin;
+            }
+        }
+    }
+    public static void hitungdino(long ingin){
+        if(ingin>0){
+            dino+=ingin;
+            dino%=7;
+        }else if(ingin<0){
+            ingin%=7;
+            dino+=ingin;
+            if(dino<0){
+                dino+=7;
+            }
+        }
+    }
+    public static int ubahbulan(String m){
+        int w=0;
+        for(int i=0;i<12;i++){
+            if(m.equals(bulan[0][i])||m.equals(bulan[1][i])){
+                w = i;
+            }
+        }
+        return w;
+    }
+    public static int ubahhari(String d){
+        int di=0;
+        if((d.equals("jumat"))||(d.equals("Jumat"))){
+                    di = 4;
+        }else{
+            for(int i=0;i<7;i++){
+                if(d.equals(hari[0][i])||d.equals(hari[1][i])){
+                    di = i;
+                }
+            }
+        }
+        return di;
+    }
+    public static void menu1(){
+        hitunghari();
+        int dt=0;
+        int jawab;
+            do{
+            System.out.println("1. Setelah\n2. Sebelum\n3. Kembali");
+            System.out.print("Jawaban : ");
+            jawab = scan.nextInt();
+            if(jawab>3){
+                System.out.println("Anda salah input");
+            }if(jawab==3){
+                dt=1;
+            }
+        }while(jawab>3);
+        if(dt==0){
+            long ingin= 1;
+            if(jawab==2){
+                ingin= -1;
+            }
+            System.out.print("Berapa hari : ");
+            ingin *= scan.nextLong();
+            hitung(ingin);
+            hitungdino(ingin);
+            System.out.println("Tanggal : "+date+" "+bulan[1][(int)(wulan)]+" "+year);
+            System.out.println("Terjadi pada hari "+hari[1][(int)(dino)]);
+        }
+    }
+    public static void menu2(){
+        String[] tanggalan = new String[3];
+        System.out.print("Tanggal berapa yang diinginkan : ");
+        String input = sc.nextLine();
+        tanggalan = input.split(" ");
+        int d = parseInt(tanggalan[0]);
+        int m = ubahbulan(tanggalan[1]);
+        int y = parseInt(tanggalan[2]);
+        int d1=0,m1=0,y1=0,jmlhhr=0,jmlhhr1=0,d2=0,mc=0,dn=0, wul=0;;
+        long r=0,wulan2,year2;
+        if(wulan==0){
+            wul=1;
+        }
+        if((d+m*100+y*10000)>(date+wulan*100+year*10000)){
+            for(long i=year;i<year+1000;i++){
+                year2=year;
+                year=i;
+                for(long j=wulan;j<12;j++){
+                    if(dn==1){
+                        break;
+                    }else{
+                    wulan2=wulan;
+                    j%=12;
+                    wulan=j;
+                    hitunghari();
+                    wulan=wulan2;
+                    for(long k= date;k<=jumlahhari;k++){
+                        if(dn==1){
+                            break;
+                        }else if(k==d&&j==m&&i==y){
+                            dn=1;
+                        }else{
+                            if(k==jumlahhari){
+                                date=1;
+                            }
+                            r++;
+                            d1++;
+                            y1+=m1/12;
+                            m1%=12;
+                            if(jmlhhr1>0){
+                                mc=m1;
+                                m1+=d1/jmlhhr1;
+                                d1%=jmlhhr1;
+                                if(m1==mc+1){
+                                    jmlhhr1=0;
+                                }
+                            }
+                            jmlhhr=(int)jumlahhari;
+                            if(jmlhhr1==0){
+                                jmlhhr1=jmlhhr;
+                            }
+                        }
+                    }
+                    }
+                    if(d1<jmlhhr1){
+                        d2=d1;
+                    }
+                }
+                year=year2;
+            }
+        }else if((d+m*100+y*10000)<(date+wulan*100+year*10000)){
+            year2=year;
+            for(int i=(int)year;i>0;i++){
+                if(wul==1){
+                    wulan=12;
+                    i--;
+                    year--;
+                }
+                for(int j=(int)wulan-1;j>=0;j--){
+                    if(dn==1||dn==2){
+                        break;
+                    }else{
+                        wulan-=1;
+                        if(wulan==11){
+                            year+=1;
+                        }
+                        hitunghari();
+                        if(wulan==11){
+                            year-=1;
+                        }d1+=d2;
+                        for(int k=(int)date;k>0;k--){
+                            if(dn==1){
+                                break;
+                            }else if(dn==2){
+                                r--;
+                                break;
+                            }else if((j==11&&y==i+1)||(m==j+1&&y==i)){
+                                if(k==d+1){
+                                    dn=1;
+                                }else if(d==date&&k==d){
+                                    dn=2;
+                                }
+                            }else if(k==1){
+                                date=jumlahhari;
+                            }r++;d1++;
+                            wulan2=wulan;
+                            wulan+=1;
+                            wulan%=12;
+                            if(wul==1){
+                                year-=1;
+                            }
+                            hitunghari();
+                            if(jmlhhr1>0){
+                                mc=m1;
+                                m1+=d1/jmlhhr1;
+                                d1%=jmlhhr1;
+                                if(m1==mc+1){
+                                    jmlhhr1=0;
+                                }   
+                            }
+                            jmlhhr=(int)jumlahhari;
+                            wulan=wulan2;
+                            if(wul==1){
+                                year+=1;
+                            }
+                            hitunghari();
+                            if(jmlhhr1==0){
+                                jmlhhr1=jmlhhr;
+                            }
+                        }
+                        if(j==0){
+                            wul=1;
+                        }
+                        if(d1<jmlhhr){
+                            d2=d1;
+                            d1=0;
+                        }
+                        y1+=m1/12;
+                        m1%=12;                    
+                    }
+                }
+            i--;
+            }
+            r*=-1;
+        year=year2;
+        }
+        hitungdino(r);
+        String se = "akan terjadi setelah ";
+        String akhir = ".";
+        String lengkap ="";
+        if(r<0){
+            se="telah terjadi ";
+            akhir="yang lalu.";
+            r*=-1;
+        }else{
+            akhir="kedepan.";
+        }
+        String hari1=r+" hari";
+        if(d2>0||m1>0||y1>0){
+            lengkap+=" atau ";
+        }
+        if(y1>0){
+            lengkap+=y1+" tahun ";
+        }
+        if(m1>0){
+            lengkap+=m1+" bulan ";
+        }
+        if(d2>0){
+            lengkap+=d2+" hari ";
+        }
+        if(lengkap.equals(" atau "+hari1+" ")){
+            lengkap=" ";
+        }
+        System.out.println("Tanggal tersebut "+se+hari1+lengkap+akhir);
+        System.out.println("Hari pada tanggal "+input+" merupakan hari "+hari[1][(int)dino]+".");
+    }
+    public static void main(String[] args) {
+        input();
+        wulan=ubahbulan(month);
+        dino=ubahhari(day);
+        dateawal=date;yearawal=year;wulanawal=wulan;dinoawal=dino;
+        menu();
+    }
+    
+}
